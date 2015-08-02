@@ -232,7 +232,7 @@ console.log("First run..");
 		if (!seen.hasOwnProperty(i)) {
 			DFS(G.vertexs[i], "edgesReverse", "finishingTime", null, finishingTime, seen);
 		}
-	}
+	}    
 
 	console.log("Finishing time" , finishingTime);
 	console.log("Second run..");
