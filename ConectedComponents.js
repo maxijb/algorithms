@@ -225,7 +225,7 @@ function getConectedComponets(G) {
 	var finishingTime = [];
 	var clusters = {};
 
-console.log("First run..");
+console.log("First run..");   
 
 	//First run getting finishingTime
 	for (var i = keys.length; i > 0; i-- ) {
