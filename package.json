@@ -18,6 +18,8 @@
   "homepage": "https://github.com/maxijb/algorithms",
   "dependencies": {
     "async": "^1.4.0",
-    "q": "^1.4.1"
+    "q": "^1.4.1",
+    "lodash": "^3.10.0",
+    "extend": "^3.0.0"
   }
 }
