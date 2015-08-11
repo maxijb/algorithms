@@ -1,6 +1,12 @@
 /// Dependencies
 var fs = require('fs');
 var extend = require("extend");
+// var stdin = process.openStdin(); 
+// require('tty').setRawMode(true);   
+
+
+
+
 
 /// Read file and create graph //////////////////////////////////////////*/
 function getGraph(data) {
@@ -14,7 +20,7 @@ function getGraph(data) {
 
 	//if not mocked data
 	if (!data) {
-		data = fs.readFileSync('./dijkstraData.txt', 'utf8');	
+		data = fs.readFileSync('/Users/mbenedetto/Sites/algorithms/dijkstraData.txt', 'utf8');	
 		content = data.split("\r\n");
 	} else {
 		// content = data.slice();
@@ -183,58 +189,70 @@ Vertex.prototype.getAdjacent =function() {
 
 
 var G = getGraph();
-console.log(G.edges);
+// console.log(G.edges);
+
+Dijkstra(G, 1, [7,37,59,82,99,115,133,165,188,197]);
 
 
 
-function BFS(g, origin, objective) {
-	var seen = {};
-	var queue = [];
-	var num = 0;
-	if (!g.vertexs[origin] || !g.vertexs[objective]) {
-		return -1;
+function Dijkstra(g, origin, wantedNumbers) {
+	var X = {}; // viewed vertexs
+	var W = {}; //weights of vertexs
+	W[origin] = 0;
+	
+
+	var temp = Search(origin);
+
+	var wanted = [];
+
+	for (var j in wantedNumbers) {
+		console.log(wantedNumbers[j], X[wantedNumbers[j]]);
+		wanted.push(X[wantedNumbers[j]]);
 	}
 
-	return Search(origin, objective, 0);
+	console.log(wanted.toString());
 
-	function Search(orig, objec, degree) {
+	// console.log(X);
 
-		console.log("me paro en ",orig, ++num, "con orden", degree);
+	function Search(node) {
 
-		if (orig == objec) {
-			return degree;
-		} else if (g.vertexs[orig].edges.hasOwnProperty(objec)) {
-			return degree + 1;
-		} else {
-			//add this to seen
-			seen[orig] = 1;
-			var edges = g.vertexs[orig].edges;
+		X[node] = W[node];
+		delete W[node];
+
+		console.log("me paro en ",node);
+		var edges = g.vertexs[node].edges;
 
 
-			//Edges sorted by degree
-			var edgesSorted = Object.keys(edges).sort(function(a, b) {
-				return g.vertexs[a].degree < g.vertexs[b].degree;
-			});
+		for (var i in edges) {
+			var weight = edges[i];
+			var vertexWeight = X[node] + weight;
 
-			//Keys unsorted
-			var edgesUnSorted = Object.keys(edges);
-
-			//which one are we going to use
-			var chosen = edgesSorted;
-			for (var i in chosen) {
-				if (!seen.hasOwnProperty(chosen[i])) {
-					seen[chosen[i]]= 1;
-					queue.push({name: chosen[i], degree: degree+1});
-				}
-			}
-
-			if (queue.length) {
-				var item = queue.shift();
-				return Search(item.name, objec, item.degree);
-			} else {
-				return -1;
+			if (!X.hasOwnProperty(i) && (!W.hasOwnProperty[i] || W[i] >= vertexWeight)) {
+				W[i] = vertexWeight;
 			}
 		}
+
+		var min = Infinity,
+			minId = null;
+
+		for (var i in W) {
+			if (W[i] < min) {
+				min = W[i];
+				minId = i;
+			}
+		}
+
+
+		// console.log(X);
+		// console.log(W);
+		// console.log(minId);
+		// if (minId != 114) {
+		// 	console.log("114 ", g.vertexs[114].edges);
+		// 	return null;
+		// }
+
+		return minId ? Search(minId) : null;
+
 	}
 
 
