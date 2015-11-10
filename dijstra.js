@@ -10,7 +10,6 @@ var extend = require("extend");
 
 /// Read file and create graph //////////////////////////////////////////*/
 function getGraph(data) {
-	debugger;
 	var content,
 		grapho,
 
@@ -21,7 +20,8 @@ function getGraph(data) {
 	//if not mocked data
 	if (!data) {
 		data = fs.readFileSync('/Users/mbenedetto/Sites/algorithms/dijkstraData.txt', 'utf8');	
-		content = data.split("\r\n");
+		var separator = data.indexOf("\r\n") == -1 ? "\n" : "\r\n";
+		content = data.split(separator);
 	} else {
 		// content = data.slice();
 		content = data.map(function(arr) {
@@ -31,8 +31,8 @@ function getGraph(data) {
 
     for (var i = 0 ; i < content.length; i++) {
     	if (typeof content[i] == "string") {
-
-    		item = content[i].split('\t');
+    		var separator = content[i].indexOf('\t') == -1 ? " " : "\t";
+    		item = content[i].split(separator);
     	}
 
     	var vertex = new Vertex(item[0]);
@@ -189,28 +189,26 @@ Vertex.prototype.getAdjacent =function() {
 
 
 var G = getGraph();
-// console.log(G.edges);
-
-Dijkstra(G, 1, [7,37,59,82,99,115,133,165,188,197]);
+console.log(Dijkstra(G, 1, [7,37,59,82,99,115,133,165,188,197]).toString());
 
 
 
 function Dijkstra(g, origin, wantedNumbers) {
 	var X = {}; // viewed vertexs
 	var W = {}; //weights of vertexs
-	W[origin] = 0;
+	W[origin] = 0; //nitializae weight of sme node as 0
 	
 
-	var temp = Search(origin);
+
+	Search(origin);
 
 	var wanted = [];
 
 	for (var j in wantedNumbers) {
-		console.log(wantedNumbers[j], X[wantedNumbers[j]]);
 		wanted.push(X[wantedNumbers[j]]);
 	}
 
-	console.log(wanted.toString());
+	return wanted;
 
 	// console.log(X);
 
@@ -219,7 +217,7 @@ function Dijkstra(g, origin, wantedNumbers) {
 		X[node] = W[node];
 		delete W[node];
 
-		console.log("me paro en ",node);
+		// console.log("me paro en ",node);
 		var edges = g.vertexs[node].edges;
 
 
@@ -227,7 +225,7 @@ function Dijkstra(g, origin, wantedNumbers) {
 			var weight = edges[i];
 			var vertexWeight = X[node] + weight;
 
-			if (!X.hasOwnProperty(i) && (!W.hasOwnProperty[i] || W[i] >= vertexWeight)) {
+			if (!X.hasOwnProperty(i) && (!W.hasOwnProperty(i) || W[i] >= vertexWeight)) {
 				W[i] = vertexWeight;
 			}
 		}
@@ -241,15 +239,6 @@ function Dijkstra(g, origin, wantedNumbers) {
 				minId = i;
 			}
 		}
-
-
-		// console.log(X);
-		// console.log(W);
-		// console.log(minId);
-		// if (minId != 114) {
-		// 	console.log("114 ", g.vertexs[114].edges);
-		// 	return null;
-		// }
 
 		return minId ? Search(minId) : null;
 
