@@ -6,8 +6,8 @@ def _get_change_making_matrix(set_of_coins, r):
 	return m
 
 
-coins = (1,5,10,50,100)
-n = 1200
+coins = (1,5,8,10,50,100)
+n = 34
 
 
 #print(_get_change_making_matrix(coins, n))
@@ -43,8 +43,6 @@ def change_making(coins, n):
             # 1. Using the previous solution for making r (without using coins[c - 1]).
             # 2. Using coins[c - 1] + the optimal solution for making r - coins[c - 1].
             else:
-            	print(c, r, r - coins[c - 1], coins[c - 1])
-            	import pdb; pdb.set_trace()
                 m[c][r] = min(m[c - 1][r], 1 + m[c][r - coins[c - 1]])
 
     return m[-1][-1]

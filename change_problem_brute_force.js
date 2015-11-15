@@ -39,6 +39,6 @@ function changeProblemBruteForce(coins, amount, state) {
 }
 
 
-var coins 	= [25,10,7,5,1],
-	amount 	= 105;
+var coins 	= [10,8,5,1],
+	amount 	= 34;
 console.log(changeProblemBruteForce(coins, amount));
