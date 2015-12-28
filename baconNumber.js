@@ -22,7 +22,7 @@ function getGraph(data) {
 	//if not mocked data
 	if (!data) {
 		data = fs.readFileSync('./imdb.txt', 'utf8');	
-		content = data.split("\r\n");
+		content = data.split("\n");
 	} else {
 		// content = data.slice();
 		content = data.map(function(arr) {
@@ -31,11 +31,12 @@ function getGraph(data) {
 	}	
 
     for (var i = 0 ; i < content.length; i++) {
+    	console.log(content[i]);
     	if (typeof content[i] == "string") {
 
     		item = content[i].split('|');
     	}
-
+    	console.log(item);
 
     	//if not empty
     	if (!actors.hasOwnProperty(item[0])) {
@@ -215,7 +216,8 @@ Vertex.prototype.getAdjacent =function() {
 
 
 var G = getGraph();
-console.log(BFS(G, "James Earl Jones", "Kevin Bacon"));
+console.log(G);
+console.log(BFS(G, "Bill Murray (I)", "Kevin Bacon"));
 
 
 
@@ -262,7 +264,9 @@ function BFS(g, origin, objective) {
 
 			if (queue.length) {
 				var item = queue.shift();
-				return Search(item.name, objec, item.degree);
+				var response = Search(item.name, objec, item.degree);
+				if (response > 0) { console.log(orig, degree); }
+				return response;
 			} else {
 				return -1;
 			}
