@@ -111,17 +111,17 @@ public class Node {
 	
 	
 	/* Find next object in order */
-	public Integer findNext() {
+	public Node findNext() {
 		if (right != null) {
 			Node next = right;
 			while(next.left != null) next = next.left;
-			return next.getKey();
+			return next;
 		} else {
 			Node next = parent;
 			Node current = this;
 			while (next != null) {
 				if (next.left == current) {
-					return next.getKey();
+					return next;
 				} else {
 					current = next;
 					next = next.parent;
@@ -130,6 +130,27 @@ public class Node {
 			
 			return null;
 		}
+	}
+	
+	public Node findSmaller() {
+		Node next = this.left;
+		Node current = this;
+		
+		while (next != null) {
+			current = next;
+			next = next.left;
+		}
+		return current;
+	}
+	
+	public Node findNth(Integer N) {
+		Node current = findSmaller();
+		int i = 0;
+		while(i < N && current != null) {
+			i++;
+			current = findNext(); 
+		}
+		return current;
 	}
 	
 }

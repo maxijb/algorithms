@@ -31,12 +31,10 @@ function getGraph(data) {
 	}	
 
     for (var i = 0 ; i < content.length; i++) {
-    	console.log(content[i]);
     	if (typeof content[i] == "string") {
 
     		item = content[i].split('|');
     	}
-    	console.log(item);
 
     	//if not empty
     	if (!actors.hasOwnProperty(item[0])) {
@@ -216,8 +214,8 @@ Vertex.prototype.getAdjacent =function() {
 
 
 var G = getGraph();
-console.log(G);
-console.log(BFS(G, "Bill Murray (I)", "Kevin Bacon"));
+// console.log(G);
+console.log(BFS(G, "Richard Fancy", "Kevin Bacon"));
 
 
 
@@ -225,51 +223,44 @@ function BFS(g, origin, objective) {
 	var seen = {};
 	var queue = [];
 	var num = 0;
+	
+	//both values must be on the graph
 	if (!g.vertexs[origin] || !g.vertexs[objective]) {
 		return -1;
 	}
 
-	return Search(origin, objective, 0);
+	seen[origin] = null;
+	var search = Search(origin, objective, 0);
+	
+
+	//Find the path looking at the seen nodes' parents
+	var path = [];
+	if (search > -1) {
+		var parent = objective;
+		while (parent) {
+			path.push(parent);
+			parent = seen[parent];
+		}
+	}
+	
+	return {num: search, path: path.reverse()};
 
 	function Search(orig, objec, degree) {
 
-		console.log("me paro en ",orig, ++num, "con orden", degree);
-
 		if (orig == objec) {
 			return degree;
-		} else if (g.vertexs[orig].edges.hasOwnProperty(objec)) {
-			return degree + 1;
 		} else {
-			//add this to seen
-			seen[orig] = 1;
-			var edges = g.vertexs[orig].edges;
 
-
-			//Edges sorted by degree
-			var edgesSorted = Object.keys(edges).sort(function(a, b) {
-				return g.vertexs[a].degree < g.vertexs[b].degree;
-			});
-
-			//Keys unsorted
-			var edgesUnSorted = Object.keys(edges);
-
-			//which one are we going to use
-			var chosen = edgesSorted;
-			for (var i in chosen) {
-				if (!seen.hasOwnProperty(chosen[i])) {
-					seen[chosen[i]]= 1;
-					queue.push({name: chosen[i], degree: degree+1});
+			var edges = Object.keys(g.vertexs[orig].edges);
+			for (var i in edges) {
+				if (!seen.hasOwnProperty(edges[i])) {
+					seen[edges[i]]= orig;
+					queue.push({name: edges[i], degree: degree+1, parent: orig});
 				}
 			}
 
-			if (queue.length) {
-				var item = queue.shift();
-				var response = Search(item.name, objec, item.degree);
-				if (response > 0) { console.log(orig, degree); }
-				return response;
-			} else {
-				return -1;
-			}
+			var item = queue.shift();
+			return item ? Search(item.name, objec, item.degree) : -1
 		}
 	}
 
